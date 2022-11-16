@@ -15,6 +15,8 @@
 #include "Logs/LogsLevels/GameLog.h"
 #include "Logs/Observer.h"
 #include "Game_commands/FileInput.h"
+#include "Game_commands/ComandsMediator.h"
+#include "Game_commands/ComandsHandler.h"
 
 class Game{
 public:

@@ -5,27 +5,26 @@
 #ifndef UNTITLED_FILEINPUT_H
 #define UNTITLED_FILEINPUT_H
 #include <fstream>
+#include "IComands.h"
 
 
-
-class FileInput{
+class FileInput : IComand{
     std::string filepath = "commands.txt";
     std::ifstream file;
     std::string commands;
+    ComandsMediator* mediator;
 public:
-    FileInput() {
-        file.open(filepath);
+    FileInput(ComandsMediator* mediator) {
+        this->mediator = mediator;
         this->enable_file_output();
     }
     ~FileInput(){
-
         free_file();
     }
-    bool read();
-    void set_standard_commands();
-    std::string get_commands();
+    void read();
+
 private:
     void free_file();
-    bool enable_file_output();
+    void enable_file_output();
 };
 #endif //UNTITLED_FILEINPUT_H
