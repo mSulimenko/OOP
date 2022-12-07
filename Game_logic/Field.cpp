@@ -79,7 +79,7 @@ cell_matrix& Field::get_field_link(){
 void Field::clear_field(){
     for(int i = 0; i < field_size_y; i++){
         for(int j = 0; j < field_size_x; j++){
-            field[i][j].set_event(nullptr);   ///////////////
+            field[i][j].set_event(nullptr);
         }
     }
     field[field_size_y/2][field_size_x/2].set_player(true);
