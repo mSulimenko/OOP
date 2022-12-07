@@ -15,7 +15,9 @@
 #include "Logs/LogsLevels/GameLog.h"
 #include "Logs/Observer.h"
 #include "Game_commands/FileInput.h"
-
+#include "Game_commands/ComandsMediator.h"
+#include "Game_commands/ComandsHandler.h"
+#include "Field_Gen/Level_Gen.h"
 class Game{
 public:
     void start();
