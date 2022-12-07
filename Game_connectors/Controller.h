@@ -2,8 +2,7 @@
 #define UNTITLED_CONTROLLER_H
 #include "../Game_logic/Field.h"
 #include "../Game_logic/Player.h"
-
-enum Moves{Up, Down, Left, Right, Stop};
+#include "../Game_commands/ComandsMediator.h"
 
 class Controller{
 private:

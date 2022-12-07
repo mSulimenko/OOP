@@ -2,14 +2,25 @@
 
 
 void Game::start() {
-
     srand(time(nullptr));
-    Field field(15, 10);
-    Player player(field.get_field_size_x()/2, field.get_field_size_y()/2);
-    FileInput fileinput;
-    if(!fileinput.read()) fileinput.set_standard_commands();
 
-    CommandReader command_reader(&player, &field, fileinput.get_commands());
+
+    int x= 10;
+    int y = 15;
+    Player player(x/2, y/2);
+    Field field(x, y);
+
+
+    ComandsMediator comands_mediator;
+    FileInput fileinput(&comands_mediator);
+    ComandsHandler comands_handler(&comands_mediator);
+    if(!fileinput.read()) comands_mediator.set_standart_comands();
+    else {
+        comands_mediator.set_comands_handler(&comands_handler);
+        comands_mediator.handle_comands();
+    }
+
+    CommandReader command_reader(&player, &field, &comands_mediator);
     field.create_field();
     field.clear_field();
     Drawfield drawfield(&field);

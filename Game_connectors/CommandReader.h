@@ -6,13 +6,14 @@
 #include "conio.h"
 #include <string>
 
+
 class CommandReader: public Controller{
 private:
     int move_direction = Stop;
-    std::string commands;
+    ComandsMediator* mediator;
 public:
-    CommandReader(Player* player, Field* field, const std::string& commands) : Controller(player, field){
-        this->commands = commands;
+    CommandReader(Player* player, Field* field, ComandsMediator* mediator) : Controller(player, field){
+        this->mediator = mediator;
     };
     void read_from_keyboard();
 
