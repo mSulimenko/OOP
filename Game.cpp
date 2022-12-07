@@ -2,16 +2,31 @@
 
 
 void Game::start() {
-
     srand(time(nullptr));
-    Field field(15, 10);
-    Player player(field.get_field_size_x()/2, field.get_field_size_y()/2);
-    FileInput fileinput;
-    if(!fileinput.read()) fileinput.set_standard_commands();
 
-    CommandReader command_reader(&player, &field, fileinput.get_commands());
-    field.create_field();
-    field.clear_field();
+
+    int x= 35;
+    int y = 25;
+    Player player(x/2, y/2);
+    Field field(x, y);
+
+
+    Level_Gen level_gen;
+    field = level_gen.switch_mapgen_level(player, x, y);
+
+
+
+    ComandsMediator comands_mediator;
+    FileInput fileinput(&comands_mediator);
+    ComandsHandler comands_handler(&comands_mediator);
+    if(!fileinput.read()) comands_mediator.set_standart_comands();
+    else {
+        comands_mediator.set_comands_handler(&comands_handler);
+        comands_mediator.handle_comands();
+    }
+
+    CommandReader command_reader(&player, &field, &comands_mediator);
+
     Drawfield drawfield(&field);
     Logger logger;
     Observer observer(&player, &logger);

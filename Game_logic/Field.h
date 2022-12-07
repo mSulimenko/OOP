@@ -37,7 +37,6 @@ public:
     int get_random_empty_cell();
 
     void add_wall();
-
     void add_heal();
     void add_key();
     void add_trap();
