@@ -25,19 +25,15 @@ public:
     Field& operator=(Field&& other);
 
     void create_field();
-
+    EventsLinks* get_event_links();
     int get_field_size_x();
-
     int get_field_size_y();
 
     cell_matrix &get_field_link();
-
     void clear_field();
-
     int get_random_empty_cell();
 
-    void add_wall();
-
+    bool add_wall();
     void add_heal();
     void add_key();
     void add_trap();

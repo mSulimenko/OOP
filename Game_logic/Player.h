@@ -18,6 +18,10 @@ public:
     void set_end_of_game(bool end);
     bool get_end_of_game();
 
+    void set_health(int health);
+    void set_strength(int str);
+    void set_keys(int key);
+
     void set_death();
     bool is_player_dead();
     void set_event_happened(bool ev);

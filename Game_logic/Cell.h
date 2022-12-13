@@ -38,7 +38,6 @@ public:
     Empty* is_empty();
 
     void set_passable(bool pass);
-
     bool is_passable();
 };
 

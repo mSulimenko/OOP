@@ -1,17 +1,28 @@
 #include "Game.h"
 
 
-void Game::start() {
-
+void Game::start_new() {
     srand(time(nullptr));
-    Field field(15, 10);
-    Player player(field.get_field_size_x()/2, field.get_field_size_y()/2);
-    FileInput fileinput;
-    if(!fileinput.read()) fileinput.set_standard_commands();
 
-    CommandReader command_reader(&player, &field, fileinput.get_commands());
-    field.create_field();
-    field.clear_field();
+
+    int x= 35;
+    int y = 25;
+    Player player(x/2, y/2);
+    Field field(x, y);
+
+
+    Level_Gen level_gen;
+    field = level_gen.switch_mapgen_level(player, x, y);
+
+    ComandsMediator comands_mediator;
+    FileInput fileinput(&comands_mediator);
+    ComandsHandler comands_handler(&comands_mediator);
+    if(!fileinput.read()) comands_mediator.set_standart_comands();
+    else {
+        comands_mediator.set_comands_handler(&comands_handler);
+        comands_mediator.handle_comands();
+    }
+    CommandReader command_reader(&player, &field, &comands_mediator);
     Drawfield drawfield(&field);
     Logger logger;
     Observer observer(&player, &logger);
@@ -100,6 +111,54 @@ void Game::start() {
     }
 
     if(is_logs) observer.check_game();
+    class SaveField saveField;
+    saveField.save_field(field);
+
+}
+
+void Game::load_game() {
+
+
+    Player player(5, 5);
+    Field field(10, 10);
+
+    class SaveField saveField;
+    class SavePlayer savePlayer;
+
+    savePlayer.load_player(player);
+    field = saveField.load_field(player);
+
+    ComandsMediator comands_mediator;
+    FileInput fileinput(&comands_mediator);
+    ComandsHandler comands_handler(&comands_mediator);
+    if(!fileinput.read()) comands_mediator.set_standart_comands();
+    else {
+        comands_mediator.set_comands_handler(&comands_handler);
+        comands_mediator.handle_comands();
+    }
+    CommandReader command_reader(&player, &field, &comands_mediator);
+    Drawfield drawfield(&field);
+    sf::RenderWindow window(sf::VideoMode(drawfield.get_window_width(), drawfield.get_window_height()), "Lab", sf::Style::Close);
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        command_reader.read_from_keyboard();
+
+
+        if(player.get_end_of_game()){
+            window.close();
+        }
+        window.clear(sf::Color(183,212,168));
+        drawfield.draw_field(window);
+        window.display();
+        sf::sleep(sf::milliseconds(100));
+    }
+    saveField.save_field(field);
 }
 
 

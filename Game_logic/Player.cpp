@@ -105,3 +105,15 @@ void Player::set_event_happened(bool ev) {
     this->event_happened = ev;
 }
 
+void Player::set_health(int health) {
+    this->health = health;
+}
+
+void Player::set_strength(int str) {
+    this->strength = str;
+}
+
+void Player::set_keys(int key) {
+    this->keys = key;
+}
+

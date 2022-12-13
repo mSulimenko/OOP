@@ -17,6 +17,8 @@ Field::Field(int field_size_x, int field_size_y) {
         this->field_size_x = field_size_x;
         this->field_size_y = field_size_y;
     }
+    create_field();
+    clear_field();
     events_links = new EventsLinks;
 }
 Field::Field(const Field &other){
@@ -79,18 +81,8 @@ cell_matrix& Field::get_field_link(){
 void Field::clear_field(){
     for(int i = 0; i < field_size_y; i++){
         for(int j = 0; j < field_size_x; j++){
-            field[i][j].set_event(nullptr);   ///////////////
+            field[i][j].set_event(nullptr);
         }
-    }
-    field[field_size_y/2][field_size_x/2].set_player(true);
-
-    add_enemy();
-    add_gun();
-    add_heal();
-    add_trap();
-
-    for(int i = 0; i < field_size_x * field_size_y / 8 ; i++){
-        add_wall();
     }
 }
 
@@ -103,6 +95,7 @@ int Field::get_random_empty_cell(){
             }
         }
     }
+    if(empty_cell_count==0) return -1;
     int target_empty_cell_index = rand() % empty_cell_count;
     int empty_cell_index = 0;
     for(int i = 0; i < field_size_y; i++){
@@ -118,13 +111,16 @@ int Field::get_random_empty_cell(){
     return -1;
 }
 
-void Field::add_wall(){
+bool Field::add_wall(){
     int wall_position = get_random_empty_cell();
     if(wall_position != -1){
         field[wall_position / field_size_x][wall_position % field_size_x].set_event(events_links->get_wall());
         field[wall_position / field_size_x][wall_position % field_size_x].set_passable(false);
+        return true;
     }
-
+    else {
+        return false;
+    }
 }
 
 void Field::add_heal() {
@@ -168,4 +164,8 @@ void Field::add_enemy() {
         field[enemy_position / field_size_x][enemy_position % field_size_x].set_passable(false);
         field[enemy_position / field_size_x][enemy_position % field_size_x].set_event(events_links->get_enemy());
     }
+}
+
+EventsLinks *Field::get_event_links() {
+    return this->events_links;
 }
