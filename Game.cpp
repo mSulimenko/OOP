@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include <iostream>
 
 void Game::start_new() {
     srand(time(nullptr));
@@ -116,7 +116,7 @@ void Game::start_new() {
 
 }
 
-void Game::load_game() {
+int Game::load_game() {
 
 
     Player player(5, 5);
@@ -126,7 +126,14 @@ void Game::load_game() {
     class SavePlayer savePlayer;
 
     savePlayer.load_player(player);
-    field = saveField.load_field(player);
+    try{
+        field = saveField.load_field(player);
+    }
+    catch (std::invalid_argument)
+    {
+        return -1;
+    }
+
 
     ComandsMediator comands_mediator;
     FileInput fileinput(&comands_mediator);
@@ -159,6 +166,7 @@ void Game::load_game() {
         sf::sleep(sf::milliseconds(100));
     }
     saveField.save_field(field);
+    savePlayer.save_player(player);
 }
 
 

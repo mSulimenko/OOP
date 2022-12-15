@@ -4,10 +4,11 @@
 #include "../Game_logic/Player.h"
 #include "../Game_logic/Cell.h"
 #include "../Game_drawing/Cell_checker.h"
+#include "Saver.h"
 #include "fstream"
 
 
-class SaveField{
+class SaveField:public Saver{
 private:
     std::ofstream file_input;
     std::ifstream file_output;

@@ -5,7 +5,10 @@
 #include "SaveField.h"
 
 void SaveField::save_field(Field &field) {
-    file_input.open(filepath,std::ios_base::out | std::ios_base::trunc);
+    file_input.exceptions(std::ofstream::badbit|std::ofstream::failbit);
+    try{
+        file_input.open(filepath,std::ios_base::out | std::ios_base::trunc);
+
     CellChecker cell_checker;
     file_input << field.get_field_size_x() << '\n';
     file_input << field.get_field_size_y() << '\n';
@@ -35,46 +38,62 @@ void SaveField::save_field(Field &field) {
     }
 
     file_input.close();
+    make_hash(filepath);
+    }
+    catch (std::exception const& e){
+        std::cout<<"error: "<<e.what();
+    }
 }
 
 Field SaveField::load_field(Player& player) {
-    file_output.open(filepath, std::ios_base::in);
-    int x, y, c;
-    char buf;
-    file_output>>x;
-    file_output>>y;
-    (int)x;(int)y;
-    Field field(x,y);
-    field.clear_field();
-    file_output.get(buf);
-    for(int i = 0; i < field.get_field_size_y(); i ++){
-        for(int j = 0; j < field.get_field_size_x(); j ++){
-            file_output.get(buf); c = buf-'0';
-            if(c==0)
-                field.get_field_link()[i][j].set_event(nullptr);
-            if(c==1)
-                field.get_field_link()[i][j].set_event(field.get_event_links()->get_wall());
-            if(c==2)
-                field.get_field_link()[i][j].set_event(field.get_event_links()->get_exit());
-            if(c==3)
-                field.get_field_link()[i][j].set_event(field.get_event_links()->get_enemy());
-            if(c==4)
-                field.get_field_link()[i][j].set_event(field.get_event_links()->get_key());
-            if(c==5)
-                field.get_field_link()[i][j].set_event(field.get_event_links()->get_gun());
-            if(c==6)
-                field.get_field_link()[i][j].set_event(field.get_event_links()->get_trap());
-            if(c==7)
-                field.get_field_link()[i][j].set_event(field.get_event_links()->get_heal());
-            if(c==8){
-                field.get_field_link()[i][j].set_player(true);
-                player.set_position_x(j);
-                player.set_position_y(i);
-            }
-        }
-        file_output.get(buf);
+    if(check_hash(filepath)==-1){
+        throw std::invalid_argument("File has been changed!");
     }
+    file_output.exceptions(std::ifstream::badbit|std::ifstream::failbit);
+    try {
+        file_output.open(filepath, std::ios_base::in);
+        int x, y, c;
+        char buf;
+        file_output >> x;
+        file_output >> y;
+        (int) x;
+        (int) y;
+        Field field(x, y);
+        field.clear_field();
+        file_output.get(buf);
+        for (int i = 0; i < field.get_field_size_y(); i++) {
+            for (int j = 0; j < field.get_field_size_x(); j++) {
+                file_output.get(buf);
+                c = buf - '0';
+                if (c == 0)
+                    field.get_field_link()[i][j].set_event(nullptr);
+                if (c == 1)
+                    field.get_field_link()[i][j].set_event(field.get_event_links()->get_wall());
+                if (c == 2)
+                    field.get_field_link()[i][j].set_event(field.get_event_links()->get_exit());
+                if (c == 3)
+                    field.get_field_link()[i][j].set_event(field.get_event_links()->get_enemy());
+                if (c == 4)
+                    field.get_field_link()[i][j].set_event(field.get_event_links()->get_key());
+                if (c == 5)
+                    field.get_field_link()[i][j].set_event(field.get_event_links()->get_gun());
+                if (c == 6)
+                    field.get_field_link()[i][j].set_event(field.get_event_links()->get_trap());
+                if (c == 7)
+                    field.get_field_link()[i][j].set_event(field.get_event_links()->get_heal());
+                if (c == 8) {
+                    field.get_field_link()[i][j].set_player(true);
+                    player.set_position_x(j);
+                    player.set_position_y(i);
+                }
+            }
+            file_output.get(buf);
+        }
 
-    file_output.close();
-    return field;
+        file_output.close();
+        return field;
+    }
+    catch (std::exception const& e){
+        std::cout<<"error: "<<e.what();
+    }
 }

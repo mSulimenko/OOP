@@ -24,6 +24,6 @@
 class Game{
 public:
     void start_new();
-    void load_game();
+    int load_game();
 };
 #endif //UNTITLED_GAME_H

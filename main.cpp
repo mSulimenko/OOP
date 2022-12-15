@@ -11,7 +11,9 @@ int main()
             game.start_new();
             break;
         case 2:
-            game.load_game();
+            if(game.load_game()==-1){
+                return -1;
+            }
             break;
     default:
         return 0;

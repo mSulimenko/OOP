@@ -6,7 +6,8 @@
 
 class SavePlayer{
 private:
-    std::fstream file;
+    std::ofstream file_input;
+    std::ifstream file_output;
     std::string filepath = "PlayerSaves.txt";
 public:
     void save_player(Player& player);
